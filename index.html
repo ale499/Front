@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listado de Empresas</title>
+</head>
+<body>
+  <table width="50%" align="center" border="1">
+    <thead>
+      <tr>
+        <th width="50%"><b>EMPRESA</b></th>
+        <th><b>VER PAGINA</b></th>
+      </tr>
+    </thead>
+    <tbody id="empresa-list">
+      <!-- Las filas se generarán dinámicamente aquí -->
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Realizar la solicitud a la API para obtener las empresas
+      fetch('http://localhost:3000/empresa')
+        .then(response => response.json())
+        .then(data => {
+          // Asegurarse de que la respuesta tenga los datos esperados
+          if (data && Array.isArray(data)) {
+            const empresaList = document.getElementById('empresa-list');
+
+            // Iterar sobre las empresas y generar las filas dinámicamente
+            data.forEach(empresa => {
+              const row = document.createElement('tr');
+
+              // Columna de la denominación de la empresa
+              const empresaCell = document.createElement('td');
+              empresaCell.textContent = empresa.denominacion || 'Sin nombre';
+              row.appendChild(empresaCell);
+
+              // Columna del enlace a la página home.html con el id de la empresa
+              const linkCell = document.createElement('td');
+              const link = document.createElement('a');
+              link.href = `home.html?id=${empresa.id}`;
+              link.textContent = 'URL PAGINA HOME';
+              linkCell.appendChild(link);
+              row.appendChild(linkCell);
+
+              // Agregar la fila a la tabla
+              empresaList.appendChild(row);
+            });
+          } else {
+            console.error('La API no devolvió datos válidos.');
+          }
+        })
+        .catch(error => {
+          console.error('Error al obtener los datos de la API:', error);
+        });
+    });
+  </script>
+</body>
+</html>
