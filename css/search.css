@@ -1,5 +1,21 @@
 @import url(//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css);
 @import url(//fonts.googleapis.com/css?family=Raleway:400,900,800,700,600,500,300,200,100);
+
+.paginador {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.paginador a {
+  margin: 0 5px;
+  text-decoration: none;
+  color: #007bff;
+}
+
+.paginador a.active {
+  font-weight: bold;
+  color: #000;
+}
 .search-form {
   display: inline-block;
   position: relative;

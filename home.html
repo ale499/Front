@@ -187,7 +187,8 @@
   </footer>
   </div>
 
-  
+
+
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -276,9 +277,12 @@
         const slides = document.querySelectorAll('#camera .camera_caption');
         slides.forEach((slide, index) => {
           if (data[index]) {
+            const noticia = data[index];
             const titulo = data[index].titulo;
             const resumen = data[index].resumen;
             const imagen = data[index].imagen;
+            const noticiaId = noticia.id; // Obtener el ID de la noticia
+
 
             // Actualizar el título
             const tituloElement = slide.querySelector('em');
@@ -297,6 +301,11 @@
               const imageUrl = `http://localhost:3000/uploads/${imagen}`;
               slide.setAttribute('data-src', imageUrl);
             }
+
+            const linkElement = slide.querySelector('a.btn-link');
+            if (linkElement) {
+              linkElement.href = `detalle.html?id=${noticiaId}`; // Pasar el ID de la noticia
+            }
           }
         });
       } else {
@@ -309,6 +318,7 @@
    });
   </script>
 
+  
 
   </body>
 </html>

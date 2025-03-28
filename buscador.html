@@ -228,6 +228,85 @@
     <script src="js/tm-scripts.js"></script>    
   <!-- </script> -->
 
+
+  <script>
+	document.addEventListener("DOMContentLoaded", function () {
+	  const urlParams = new URLSearchParams(window.location.search);
+	  const textoBusqueda = urlParams.get('buscar') || ''; // Texto ingresado en el campo de búsqueda
+	  const noticiasContainer = document.querySelector('.row.offs2'); // Contenedor de las noticias
+	  const paginadorContainer = document.createElement('div'); // Contenedor del paginador
+	  paginadorContainer.classList.add('paginador');
+	  noticiasContainer.after(paginadorContainer);
+  
+	  let paginaActual = 1;
+	  const limite = 20;
+  
+	  function cargarNoticias(pagina) {
+		fetch(`http://localhost:3000/noticia/buscar?texto=${textoBusqueda}&pagina=${pagina}&limite=${limite}`)
+		  .then(response => response.json())
+		  .then(data => {
+			noticiasContainer.innerHTML = ''; // Limpiar el contenedor de noticias
+			paginadorContainer.innerHTML = ''; // Limpiar el paginador
+  
+			if (data.rows && data.rows.length > 0) {
+			  data.rows.forEach(noticia => {
+				const noticiaHTML = `
+				  <table width="90%" align="center">
+					<tbody>
+					  <tr>
+						<td>
+						  <a href="detalle.html?id=${noticia.id}">
+							<img width="250px" class="imgNoticia" src="http://localhost:3000/uploads/${noticia.imagen || 'default.jpg'}" alt="${noticia.titulo}">
+						  </a>
+						</td>
+						<td width="25"></td>
+						<td style="text-align:justify;" valign="top">
+						  <a style="text-align:justify; font-size:20px" href="detalle.html?id=${noticia.id}" class="banner">
+							${noticia.titulo}
+						  </a>
+						  <div class="verOcultar">
+							${noticia.resumen} <a href="detalle.html?id=${noticia.id}" style="color:blue"> Leer Más - ${new Date(noticia.fechaPublicacion).toLocaleDateString()}</a>
+						  </div>
+						</td>
+					  </tr>
+					</tbody>
+				  </table>
+				  <hr>
+				`;
+				noticiasContainer.insertAdjacentHTML('beforeend', noticiaHTML);
+			  });
+  
+			  // Crear el paginador
+			  const totalPaginas = Math.ceil(data.count / limite);
+			  for (let i = 1; i <= totalPaginas; i++) {
+				const paginaLink = document.createElement('a');
+				paginaLink.href = `#`;
+				paginaLink.textContent = i;
+				paginaLink.classList.add('pagina-link');
+				if (i === pagina) {
+				  paginaLink.classList.add('active');
+				}
+				paginaLink.addEventListener('click', (e) => {
+				  e.preventDefault();
+				  cargarNoticias(i);
+				});
+				paginadorContainer.appendChild(paginaLink);
+			  }
+			} else {
+			  noticiasContainer.innerHTML = '<p>No se encontraron noticias.</p>';
+			}
+		  })
+		  .catch(error => {
+			console.error('Error al cargar las noticias:', error);
+			noticiasContainer.innerHTML = '<p>Error al cargar las noticias.</p>';
+		  });
+	  }
+  
+	  // Cargar las noticias de la primera página
+	  cargarNoticias(paginaActual);
+	});
+  </script>
+
 <!-- coded by vitlex -->
 
   </body>
